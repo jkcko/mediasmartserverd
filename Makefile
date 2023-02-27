@@ -51,6 +51,18 @@ package-signed: prepare-for-packaging
 		bzr builddeb -S; \
 	fi
 
+install: mediasmartserverd
+	install -s -t /usr/sbin mediasmartserverd
+	install -t /lib/systemd/system lib/systemd/system/mediasmartserver.service
+	systemctl enable mediasmartserver
+	systemctl start mediasmartserver
+
+uninstall:
+	-systemctl stop mediasmartserver
+	-systemctl disable mediasmartserver
+	-rm -f /lib/systemd/system/mediasmartserver.service
+	-rm -f /usr/sbin/mediasmartserverd
+
 # When rejected because of *.orig.tar.gz:
 #    1) Download the pristine original tarball
 #    2) cd ../mediasmartserver;
