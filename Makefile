@@ -9,7 +9,7 @@ CXXFLAGS = $(CFLAGS)
 LDFLAGS = -ludev -ldl -lpthread
 
 # build libraries and options
-all: clean mediasmartserverd
+all: mediasmartserverd
 
 clean:
 	rm *.o mediasmartserverd core -f

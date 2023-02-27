@@ -326,6 +326,19 @@ int DeviceMonitor::scsiHostIndex_( udev_device* device ) {
 /////////////////////////////////////////////////////////////////////////////
 /// test if the given device is acceptable
 bool DeviceMonitor::acceptDevice_( udev_device* device ) {
-	return strcmp("ata", udev_device_get_property_value(device, "ID_BUS")) == 0
-		&& strcmp("disk", udev_device_get_property_value(device, "DEVTYPE")) == 0;
+	const char *subsystem = udev_device_get_subsystem(device);
+	const char *id_bus = udev_device_get_property_value(device, "ID_BUS");
+	const char *devtype = udev_device_get_property_value(device, "DEVTYPE");
+
+	if (subsystem == NULL) {
+		return false;
+	}
+	else if (strcmp("block", subsystem) == 0) {
+		return id_bus != NULL && strcmp("ata", id_bus) == 0
+			&& devtype != NULL && strcmp("disk", devtype) == 0;
+	}
+	else if (strcmp("scsi", subsystem) == 0) {
+		return devtype != NULL && strcmp("scsi_device", devtype) == 0;
+	}
+	return false;
 }
